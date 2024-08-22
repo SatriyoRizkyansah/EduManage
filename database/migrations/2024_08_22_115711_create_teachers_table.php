@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nip')->nullable();
             $table->string('name');
             $table->text('address')->nullable();
-            $table->string('profile');
+            $table->string('profile')->nullable();
             $table->timestamps();
         });
     }
