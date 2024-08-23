@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use stdClass;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Student;
@@ -10,6 +11,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\DatePicker;
@@ -59,6 +61,16 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('No')->state(
+                static function (HasTable $livewire, stdClass $rowLoop): string {
+                    return (string) (
+                        $rowLoop->iteration +
+                        ($livewire->getTableRecordsPerPage() * (
+                            $livewire->getTablePage() - 1
+                        ))
+                    );
+                }
+            ),
                 TextColumn::make('nis')
                     ->label('NIS'),
                 TextColumn::make('name')

@@ -15,6 +15,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use stdClass;
+use Filament\Tables\Contracts\HasTable;
 
 class TeacherResource extends Resource
 {
@@ -34,7 +36,6 @@ class TeacherResource extends Resource
                     ->required(),
                 TextInput::make('address'),
                 FileUpload::make('profile')
-                    ->disk('uploads'),
             ]);
     }
 
@@ -42,6 +43,16 @@ class TeacherResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('No')->state(
+                static function (HasTable $livewire, stdClass $rowLoop): string {
+                    return (string) (
+                        $rowLoop->iteration +
+                        ($livewire->getTableRecordsPerPage() * (
+                            $livewire->getTablePage() - 1
+                        ))
+                    );
+                }
+            ),
                 TextColumn::make('nip'),
                 TextColumn::make('name'),
                 TextColumn::make('address')
