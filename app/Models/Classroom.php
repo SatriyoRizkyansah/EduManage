@@ -11,4 +11,8 @@ class Classroom extends Model
 
     protected $guarded = [];
 
+    public function classroom(){
+        return $this->hasMany(HomeRoom::class, 'teacher_id', 'id');
+    }
+
 }
