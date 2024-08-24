@@ -88,6 +88,9 @@ class StudentResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            // ->headerActions([
+            //     Tables\Actions\CreateAction::make(),
+            // ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -110,4 +113,5 @@ class StudentResource extends Resource
             'edit' => Pages\EditStudent::route('/{record}/edit'),
         ];
     }
+
 }
