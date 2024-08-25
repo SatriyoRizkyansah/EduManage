@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\StudentResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
+use Filament\Infolists;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 
 class StudentResource extends Resource
 {
@@ -42,7 +45,7 @@ class StudentResource extends Resource
                     ]),
                 DatePicker::make('birthday')
                     ->label("Birthday"),
-                    Select::make("gender")
+                    Select::make("religion")
                         ->options([
                             "islam" => "Islam",
                             "Katolik" => "Katolik",
@@ -86,6 +89,7 @@ class StudentResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             // ->headerActions([
@@ -111,7 +115,18 @@ class StudentResource extends Resource
             'index' => Pages\ListStudents::route('/'),
             'create' => Pages\CreateStudent::route('/create'),
             'edit' => Pages\EditStudent::route('/{record}/edit'),
+            'view' => Pages\ViewStudent::route('/{record}'),
+
         ];
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('nis'),
+                TextEntry::make('name'),
+            ]);
     }
 
 }
