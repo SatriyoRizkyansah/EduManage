@@ -23,6 +23,9 @@ class PeriodeResource extends Resource
 
     protected static ?string $navigationLabel = 'Periode';
 
+    protected static ?string $navigationGroup = 'Setting';
+
+
     public static function form(Form $form): Form
     {
         return $form

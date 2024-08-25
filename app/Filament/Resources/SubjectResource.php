@@ -4,38 +4,42 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Subject;
+use Filament\Forms\Set;
 use Filament\Forms\Form;
-use App\Models\Department;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\SubjectResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\DepartmentResource\Pages;
-use App\Filament\Resources\DepartmentResource\RelationManagers;
-use Filament\Forms\Set;
-use Illuminate\Support\Str;
-use Filament\Tables\Columns\TextColumn;
+use App\Filament\Resources\SubjectResource\RelationManagers;
+use Filament\Forms\Components\Card;
 
-class DepartmentResource extends Resource
+class SubjectResource extends Resource
 {
-    protected static ?string $model = Department::class;
+    protected static ?string $model = Subject::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Source';
+    protected static ?string $navigationGroup = 'Academic';
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name_department')
-                    ->label('Department Name')
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
-                TextInput::make('slug'),
-                TextInput::make('description'),
+                Card::make()
+                    ->schema([
+                        TextInput::make('kode'),
+                        TextInput::make('name')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+                            
+                        TextInput::make('slug')
+                ])
             ]);
     }
 
@@ -43,10 +47,8 @@ class DepartmentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name_department')
-                    ->label('Department Name'),
-                // TextColumn::make('slug'),
-                TextColumn::make('description'),
+                TextColumn::make('kode'),
+                TextColumn::make('name'),
             ])
             ->filters([
                 //
@@ -71,9 +73,9 @@ class DepartmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepartments::route('/'),
-            'create' => Pages\CreateDepartment::route('/create'),
-            'edit' => Pages\EditDepartment::route('/{record}/edit'),
+            'index' => Pages\ListSubjects::route('/'),
+            'create' => Pages\CreateSubject::route('/create'),
+            'edit' => Pages\EditSubject::route('/{record}/edit'),
         ];
     }
 }

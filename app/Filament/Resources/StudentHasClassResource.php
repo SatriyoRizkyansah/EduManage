@@ -24,6 +24,8 @@ class StudentHasClassResource extends Resource
 {
     protected static ?string $model = StudentHasClass::class;
 
+    protected static ?string $navigationGroup = 'Academic';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
