@@ -19,12 +19,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\TextEntry;
 use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Resources\StudentResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\StudentResource\RelationManagers;
+
 
 class StudentResource extends Resource
 {
@@ -82,15 +84,25 @@ class StudentResource extends Resource
                     ->label('Student Name'),
                 TextColumn::make('gender'),
                 TextColumn::make('birthday')
-                    ->label("Birthday"),
-                TextColumn::make("gender"),
+                    ->label("Birthday")
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make("gender")
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('contact'),
                 ImageColumn::make('profile'),
                 TextColumn::make('status')
+                    ->toggleable(isToggledHiddenByDefault: true) 
                     ->formatStateUsing(fn (string $state): string => ucwords("{$state}"))
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->multiple()
+                    ->options([
+                        'accept' => 'Accept',
+                        'off' => 'Off',
+                        'move' => 'Move',
+                        'grade' => 'Grade',
+                    ])
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -104,16 +116,15 @@ class StudentResource extends Resource
                     BulkAction::make('Accept')
                         ->icon('heroicon-m-check')
                         ->requiresConfirmation()
-                        ->action(function (Collection $records) {
-                            return $records->each->update(['status' => 'accept']);
-                        }),
-                    BulkAction::make('Off')
-                        ->icon('heroicon-m-check')
-                        ->requiresConfirmation()
-                        ->action(function (Collection $records) {
-                            return $records->each(function($record) {                           
-                            $id = $record->id;
-                            Student::where('id', $id)->update(['status' => 'off']);
+                        ->form([
+                            Select::make('Status')
+                            ->label("Status")
+                            ->options(['accept' => 'Accept', 'off' => 'Off', 'move' => 'Move', 'grade' => 'Grade',])
+                            ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data) {
+                            $records->each(function($record) use ($data){
+                                Student::where('id', $record->id)->update(['status' => $data['Status']]);
                             });
                         }),
                     Tables\Actions\DeleteBulkAction::make(),

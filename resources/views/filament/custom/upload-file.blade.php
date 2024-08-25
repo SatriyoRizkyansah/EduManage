@@ -1,9 +1,8 @@
-    <div>
         <x-filament::breadcrumbs :breadcrumbs="[
             '/admin/students' => 'Students',
             '' => 'List',
         ]" />
-
+    <div>
         <h1>Upload File</h1>
 
         <div class="flex justify-between mt-1">
