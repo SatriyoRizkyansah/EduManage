@@ -11,4 +11,8 @@ class Subject extends Model
 
     protected $guarded = [];
 
+    public function classrooms(){
+        return $this->belongsToMany(Classroom::class);
+    }
+
 }
